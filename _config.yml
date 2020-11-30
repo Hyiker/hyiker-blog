@@ -3,17 +3,17 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
+title: 甲醛的技术博客
 subtitle: ''
 description: ''
-keywords:
-author: John Doe
-language: en
+keywords: 技术 互联网 OS
+author: Hyiker Hu
+language: zh
 timezone: ''
 
 # URL
 ## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
-url: http://example.com
+url: https://hyiker.github.io
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
@@ -103,4 +103,7 @@ theme: landscape
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
-  type: ''
+  type: 'git'
+  repo:
+    github: 'git@github.com:Hyiker/hyiker.github.io.git'
+  brach: 'master'
