@@ -1,0 +1,30 @@
+
+.DS_Store
+Thumbs.db
+db.json
+*.log
+node_modules/
+public/
+.deploy*/
+
+
+# Created by https://www.toptal.com/developers/gitignore/api/vscode,hexo
+# Edit at https://www.toptal.com/developers/gitignore?templates=vscode,hexo
+
+### Hexo ###
+db.json
+public/
+.deploy_git/
+
+### vscode ###
+.vscode/*
+!.vscodettings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# End of https://www.toptal.com/developers/gitignore/api/vscode,hexo
+
+.secret/
+ 
