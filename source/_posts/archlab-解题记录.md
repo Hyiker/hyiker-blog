@@ -1,0 +1,157 @@
+---
+title: archlab 解题记录
+date: 2020-12-01 20:58:49
+tags: archlab csapp
+keywords:
+categories: csapp解题记录
+description: 最近心血来潮，打算把csapp课程中，除了课内要求的bomb lab和attack lab以外的几个lab做掉，现在面对的第一个就是实验四——arch lab
+summary_img:
+---
+
+## 实验说明
+
+这个 lab 的实验说明就比较劝退，我先看了开头的 Part A 部分，大致意思是，课程设置了一种新的指令集：`Y86-64`，相对于 `x86` 指令集精简了很多，
+以用来进行实验，幸好的是，经过前两个 lab 的摧残，已经对汇编代码有~~抗性~~较好的认识了。
+
+## 事前准备
+
+首先使用 `tar -zvf archlab-handout.tar` 解压实验文件压缩包，然后运行
+
+```bash
+cd sim
+make clean; make
+```
+
+编译工具链，期间遇到了 `/usr/bin/ld: cannot find -ltk /usr/bin/ld: cannot find -ltcl` 找不到两个库的错误，看了下这两个库应该是 gui 相关的，理论上来说可以直接在 makefile 里关掉，或者也可以下载安装
+
+```bash
+apt install -y tk-dev tcl-dev
+```
+
+### Part A
+
+进入正题，part a 主要要求我们使用 Y86 指令翻译一些 C 语言程序指令，其中需要翻译的 `examples.c` 如下：
+
+```C
+typedef struct ELE {
+    long val;
+    struct ELE *next;
+} *list_ptr;
+
+/* sum_list - Sum the elements of a linked list */
+long sum_list(list_ptr ls)
+{
+    long val = 0;
+    while (ls) {
+	val += ls->val;
+	ls = ls->next;
+    }
+    return val;
+}
+
+/* rsum_list - Recursive version of sum_list */
+long rsum_list(list_ptr ls)
+{
+    if (!ls)
+	    return 0;
+    else {
+        long val = ls->val;
+        long rest = rsum_list(ls->next);
+        return val + rest;
+    }
+}
+
+/* copy_block - Copy src to dest and return xor checksum of src */
+long copy_block(long *src, long *dest, long len)
+{
+    long result = 0;
+    while (len > 0) {
+	long val = *src++;
+	*dest++ = val;
+	result ^= val;
+	len--;
+    }
+    return result;
+}
+/* $end examples */
+
+```
+
+#### sum_list
+
+为了测试，我们首先编写运行框架
+
+```assembly
+.pos 0
+    irmovq stack, %rsp
+    call main
+    halt
+
+.align 8
+ele1:
+.quad 0x00a
+.quad ele2
+ele2:
+.quad 0x0b0
+.quad ele3
+ele3:
+.quad 0xc00
+.quad 0
+
+
+main:
+    irmovq ele1, %rdi
+    ret
+
+.pos 0x200
+    stack:
+
+```
+
+接下来，编写 `sum` 函数：
+
+```assembly
+sum:
+    irmovq $0, %rax
+    andq %rdi, %rdi
+    jmp test
+loop:
+    mrmovq (%rdi), %r10
+    addq %r10, %rax
+    mrmovq 8(%rdi), %rdi
+    andq %rdi, %rdi
+test:
+    jne loop
+    ret
+
+```
+
+函数逻辑很简单，不多做解释，有几个要注意的点是：
+
+-   Y86 指令集只支持偏移寻址，即 `instant(%reg)`
+-   Y86 指令集不支持直接使用内存地址来进行算数运算
+
+#### rsum_list
+
+使用递归的方法遍历链表并且将其中的值相加
+
+```assembly
+rsum:
+    xorq %rax, %rax
+    andq %rdi, %rdi
+    je return
+    mrmovq (%rdi), %r10
+    addq %r10, %rax
+    pushq %rax
+    mrmovq 8(%rdi), %rdi
+    call rsum
+    popq %r10
+    addq %r10, %rax
+return:
+    ret
+```
+
+需要注意的点：%rax 寄存器为调用者保存寄存器(caller saved register)，如果要在本函数中继续使用，需要将其 push 入栈，然后再 pop。
+代码中的%r10 寄存器理论上也是调用者保存的，但是由于接下来的代码中并没有需要其保存值使用的，因此并没有将其入栈。
+
+未完待续...
