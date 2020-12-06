@@ -81,7 +81,7 @@ long copy_block(long *src, long *dest, long len)
 
 为了测试，我们首先编写运行框架
 
-```assembly
+```x86asm
 .pos 0
     irmovq stack, %rsp
     call main
@@ -110,7 +110,7 @@ main:
 
 接下来，编写 `sum` 函数：
 
-```assembly
+```x86asm
 sum:
     irmovq $0, %rax
     andq %rdi, %rdi
@@ -135,7 +135,7 @@ test:
 
 使用递归的方法遍历链表并且将其中的值相加
 
-```assembly
+```x86asm
 rsum:
     xorq %rax, %rax
     andq %rdi, %rdi
@@ -154,4 +154,41 @@ return:
 需要注意的点：%rax 寄存器为调用者保存寄存器(caller saved register)，如果要在本函数中继续使用，需要将其 push 入栈，然后再 pop。
 代码中的%r10 寄存器理论上也是调用者保存的，但是由于接下来的代码中并没有需要其保存值使用的，因此并没有将其入栈。
 
-未完待续...
+### 2020/12/6 Updated
+
+#### copy_block
+
+用于从一个块中复制指定长度的内容到另一个块中，同样是使用循环结构，但是这一次需要加上条件判断，这里使用到的有：
+
+`subq $0, %rdx`：（pseudo）将%rdx 中的内容减去 0，设置 CF（最高位是否进位^是否是减法）、SF（结果是否为负数）、ZF（结果是否为 0），用于跳转使用（或者可以简单理解为`cmp $0, %rdx`，然鹅 Y86 并没有支持）
+
+`jg body`：如果%rdx > 0，则跳转，是否跳转取决于`~(SF^OF)&~ZF`
+
+下面贴上 Y86 代码：
+
+```x86asm
+copy_block:
+    # src:%rdi dest:%rsi len:%rdx
+    xorq %rax, %rax
+    jmp tst
+body:
+    irmovq $8, %r10
+    mrmovq (%rdi), %r11
+    addq %r10, %rdi
+    rmmovq %r11, (%rsi)
+    addq %r10, %rsi
+    xorq %r11, %rax
+    irmovq $1, %r10
+    subq %r10, %rdx
+tst:
+    xorq %r10, %r10
+    subq %r10, %rdx
+    jg body
+    ret
+```
+
+至此，Part A 告一段落，下面进入 Part B
+
+### Part B
+
+待填坑
