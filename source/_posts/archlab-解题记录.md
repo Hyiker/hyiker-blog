@@ -195,4 +195,53 @@ tst:
 
 ### Part B
 
-待填坑
+阅读题面：
+
+Your task in Part B is to extend the SEQ processor to support the `iaddq`.
+
+很明显，这道题需要我们使用 `HCL` 语言来实现 `iaddq` 指令，即允许直接给一个寄存器加上一个立即数。参照 CSAPP 的图 4-18 我们可以做出 iaddq 的整个流程：
+
+| 阶段    | `Opq rA, rB`                                                                    | `iaddq V, rB`                                                                                          |
+| ------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 取指    | icode: ifun ← M<sub>1</sub>[PC] <br>rA:rB←M<sub>1</sub>[PC+1]<br><br>valP← PC+2 | icode: ifun ← M<sub>1</sub>[PC]<br>rA:rB←M<sub>1</sub>[PC+1]<br>valC←M<sub>8</sub>[PC+2]<br>valP←PC+10 |
+| 译码    | valA←R[rA]<br>valA←R[rA]                                                        | valB←R[rB]                                                                                             |
+| 执行    | valE←valB OP valA                                                               | valE←valB + valC                                                                                       |
+| 访存    |                                                                                 |                                                                                                        |
+| 写回    | R[rB]←valE                                                                      | R[rB]←valE                                                                                             |
+| 更新 PC | PC←valP                                                                         | PC←valP                                                                                                |
+
+**_valC、valE、valP_**：分别代表运算所 fetch 的常数、alu 的运算结果、命令执行完后下一条命令的地址。
+
+这么一看，iaddq 其实和 irmovq 指令是基本完全相同的，但是要指出以下两个不同点：
+
+1. iaddq 指令需要获取 rB 寄存器中的值参与运算，而 irmovq 则不需要。
+2. iaddq 指令属于运算指令，需要设置 Flag 的值改变，而 irmovq 不需要。
+
+因此总的算下来，我们在`seq-full.hcl`中需要区别于 IIRMOVQ 的只有两个地方：
+
+```bash
+################ Decode Stage    ###################################
+
+## What register should be used as the B source?
+word srcB = [
+	icode in { IOPQ, IRMMOVQ, IMRMOVQ ,IIADDQ } : rB;
+	icode in { IPUSHQ, IPOPQ, ICALL, IRET } : RRSP;
+	1 : RNONE;  # Don't need register
+];
+```
+
+```bash
+## Select input B to ALU
+word aluB = [
+	icode in { IRMMOVQ, IMRMOVQ, IOPQ, ICALL,
+		      IPUSHQ, IRET, IPOPQ, IIADDQ } : valB;
+	icode in { IRRMOVQ, IIRMOVQ } : 0;
+	# Other instructions don't need ALU
+];
+```
+
+结果就是将立即数与寄存器中的值相加，存回寄存器中，按照实验指导书上的指令 pass 掉了所有的 benchmark，进入下一个阶段。
+
+### Part C
+
+此坑待填
