@@ -1,7 +1,7 @@
 # Version of the configuration file
 version: 4.0.0
 # Icarus theme variant, can be "default" or "cyberpunk"
-variant: cyberpunk
+variant: default
 # Path or URL to the website's logo
 logo: /img/logo.svg
 # Page metadata configurations
@@ -108,20 +108,14 @@ navbar:
     links:
         Download on GitHub:
             icon: fab fa-github
-            url: 'https://github.com/ppoffice/hexo-theme-icarus'
+            url: 'https://github.com/Hyiker'
 # Page footer configurations
 footer:
     # Links to be shown on the right of the footer section
     links:
-        Creative Commons:
-            icon: fab fa-creative-commons
-            url: 'https://creativecommons.org/'
-        Attribution 4.0 International:
-            icon: fab fa-creative-commons-by
-            url: 'https://creativecommons.org/licenses/by/4.0/'
         Download on GitHub:
             icon: fab fa-github
-            url: 'https://github.com/ppoffice/hexo-theme-icarus'
+            url: 'https://github.com/Hyiker'
 # Article related configurations
 article:
     # Code highlight settings
@@ -217,33 +211,27 @@ widgets:
         position: left
         type: profile
         # Author name
-        author: Your name
+        author: Hyiker Hu
         # Author title
-        author_title: Your title
+        author_title: Web Backend/OS-Level Developer
         # Author's current location
-        location: Your location
+        location: Beijing, China
         # URL or path to the avatar image
-        avatar: 
+        avatar: https://www.imageoss.com/images/2020/12/07/QQ20201207115917212cafa6afa5211b.jpg
         # Whether show the rounded avatar image
-        avatar_rounded: false
+        avatar_rounded: true
         # Email address for the Gravatar
         gravatar: 
         # URL or path for the follow button
-        follow_link: 'https://github.com/ppoffice'
+        follow_link: 'https://github.com/Hyiker'
         # Links to be shown on the bottom of the profile widget
         social_links:
             Github:
                 icon: fab fa-github
-                url: 'https://github.com/ppoffice'
-            Facebook:
-                icon: fab fa-facebook
-                url: 'https://facebook.com'
-            Twitter:
-                icon: fab fa-twitter
-                url: 'https://twitter.com'
+                url: 'https://github.com/Hyiker'
             Dribbble:
-                icon: fab fa-dribbble
-                url: 'https://dribbble.com'
+                icon: fab fa-zhihu
+                url: 'https://www.zhihu.com/people/sidice-24'
             RSS:
                 icon: fas fa-rss
                 url: /
@@ -266,7 +254,6 @@ widgets:
         # Names and URLs of the sites
         links:
             Hexo: 'https://hexo.io'
-            Bulma: 'https://bulma.io'
     # Categories widget configurations
     -
         # Where should the widget be placed, left sidebar or right sidebar
@@ -287,24 +274,6 @@ widgets:
         # Where should the widget be placed, left sidebar or right sidebar
         position: left
         type: tags
-    # Google FeedBurner email subscription widget configurations
-    -
-        # Where should the widget be placed, left sidebar or right sidebar
-        position: left
-        type: subscribe_email
-        # Hint text under the email input
-        description: 
-        # Feedburner ID
-        feedburner_id: ''
-    # Google AdSense unit configurations
-    -
-        # Where should the widget be placed, left sidebar or right sidebar
-        position: left
-        type: adsense
-        # AdSense client ID
-        client_id: ''
-        # AdSense AD unit ID
-        slot_id: ''
 # Plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/
 plugins:
@@ -386,6 +355,6 @@ providers:
     # Name or URL template of the JavaScript and/or stylesheet CDN provider
     cdn: jsdelivr
     # Name or URL template of the webfont CDN provider
-    fontcdn: google
+    fontcdn: loli
     # Name or URL of the fontawesome icon font CDN provider
-    iconcdn: fontawesome
+    iconcdn: loli

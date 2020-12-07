@@ -7,6 +7,11 @@ categories: AI
 description: 随手写的小玩意
 summary_img:
 ---
+
+使用决策树模型实现了一个简单的智障寻路。
+
+<!-- more -->
+
 ```cpp
 #include <bits/stdc++.h>
 #include <chrono>

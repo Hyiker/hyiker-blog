@@ -10,31 +10,33 @@ summary_img:
 
 ## 简述
 
-最近通过rust book学习rust，根据最后一章的内容制作了一个简单的异步http服务器。
+最近通过 rust book 学习 rust，根据最后一章的内容制作了一个简单的异步 http 服务器。
+
+<!-- more -->
 
 ### 项目结构
 
 |-- hanabi
 
-  |-- .gitignore
+|-- .gitignore
 
-  |-- 404.html
+|-- 404.html
 
-  |-- Cargo.lock
+|-- Cargo.lock
 
-  |-- Cargo.toml
+|-- Cargo.toml
 
-  |-- hello.html
+|-- hello.html
 
-  |-- src
+|-- src
 
-  |  |-- lib.rs
+| |-- lib.rs
 
-  |  |-- main.rs
+| |-- main.rs
 
-  |-- target
+|-- target
 
-​    |-- ..
+​ |-- ..
 
 ### 代码部分
 
@@ -57,7 +59,7 @@ fn main() {
 }
 ```
 
-`main`函数部分，我们设计了一个`ThreadPool`来实现同步地接受多个请求，在每次接受到一个`listener.incoming()`的请求时，都把他转化为一个`stream`后在pool里进行`execute`，`handle`方法如下：
+`main`函数部分，我们设计了一个`ThreadPool`来实现同步地接受多个请求，在每次接受到一个`listener.incoming()`的请求时，都把他转化为一个`stream`后在 pool 里进行`execute`，`handle`方法如下：
 
 ```rust
 fn handle_connection(mut stream: TcpStream) {
@@ -134,7 +136,7 @@ enum Message {
 type Job = Box<dyn FnOnce() + Send + 'static>;
 ```
 
-这里回忆一下`Box<T>`：类似于`C++`中的___智能指针___，`Box`负责从heap上分配内存，并且将`T`类型的对象放置于其上（rust中的对象默认是分配在栈上的）。`dyn`则表示对象是动态分发的基类`trait`；`Send`表示该对象可以在线程间安全地传递ownership，可以作为___跨线程共享___的marker；`FnOnce`表示该方法只能被调用一次。
+这里回忆一下`Box<T>`：类似于`C++`中的**_智能指针_**，`Box`负责从 heap 上分配内存，并且将`T`类型的对象放置于其上（rust 中的对象默认是分配在栈上的）。`dyn`则表示对象是动态分发的基类`trait`；`Send`表示该对象可以在线程间安全地传递 ownership，可以作为**_跨线程共享_**的 marker；`FnOnce`表示该方法只能被调用一次。
 
 接下来我们详解一下`ThreadPool`部分的方法实现：
 
@@ -155,7 +157,7 @@ pub fn new(size: usize) -> ThreadPool {
 }
 ```
 
-`ThreadPool`的创建，对于每一个即将进入`workers`队列中的方法我们都会对其进行初始化，这里就不需要每次都去new一个receiver了，而是可以直接使用`Arc::clone`方法来进行实现。
+`ThreadPool`的创建，对于每一个即将进入`workers`队列中的方法我们都会对其进行初始化，这里就不需要每次都去 new 一个 receiver 了，而是可以直接使用`Arc::clone`方法来进行实现。
 
 `ThreadPool::execute`
 
@@ -174,5 +176,4 @@ pub fn execute<F>(&self, f: F)
 
 ### 小结
 
-跟着官网做完这个例子之后，感觉看书的时候还是有很多知识点其实并不完全了解清楚，所以果然编程还是的多靠实践啊，后续也许会继续进行优化改进，并且同步更新rust的学习笔记。
-
+跟着官网做完这个例子之后，感觉看书的时候还是有很多知识点其实并不完全了解清楚，所以果然编程还是的多靠实践啊，后续也许会继续进行优化改进，并且同步更新 rust 的学习笔记。
