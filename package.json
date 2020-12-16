@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bulma-stylus": "^0.8.0",
-    "hexo": "^5.0.0",
+    "hexo": "^5.2.0",
     "hexo-deployer-git": "^2.1.0",
     "hexo-generator-archive": "^1.0.0",
     "hexo-generator-category": "^1.0.0",
@@ -25,5 +25,9 @@
     "hexo-renderer-stylus": "^2.0.0",
     "hexo-server": "^2.0.0",
     "hexo-theme-icarus": "^4.1.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/register": "^7.12.10"
   }
 }
