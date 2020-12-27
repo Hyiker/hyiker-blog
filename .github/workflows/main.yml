@@ -22,9 +22,7 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
    
-    - name: Setup Hexo env
-        env:
-          ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
+    - name: install pandoc
         run: |
           curl -s -L https://github.com/jgm/pandoc/releases/download/2.11.3.1/pandoc-2.11.3.1-linux-amd64.tar.gz | tar xvzf - -C $RUNNER_TOOL_CACHE/
 
