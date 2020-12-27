@@ -24,7 +24,8 @@ jobs:
    
     - name: install pandoc
       run: |
-        curl -s -L https://github.com/jgm/pandoc/releases/download/2.11.3.1/pandoc-2.11.3.1-linux-amd64.tar.gz | tar xvzf - -C $RUNNER_TOOL_CACHE/
+        wget -O pandoc.deb https://github.com/jgm/pandoc/releases/download/2.11.3.1/pandoc-2.11.3.1-1-amd64.deb
+        sudo dpkg -i pandoc.deb
 
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
