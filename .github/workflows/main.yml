@@ -22,12 +22,17 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
    
-    - name: install pandoc
-      run: sudo apt-get install -y pandoc
+    - name: Setup Hexo env
+        env:
+          ACTION_DEPLOY_KEY: ${{ secrets.ACTION_DEPLOY_KEY }}
+        run: |
+          curl -s -L https://github.com/jgm/pandoc/releases/download/2.11.3.1/pandoc-2.11.3.1-linux-amd64.tar.gz | tar xvzf - -C $RUNNER_TOOL_CACHE/
 
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
-      run: npm ci
+      run: |
+        export PATH="$PATH:$RUNNER_TOOL_CACHE/pandoc-2.11.3.1-linux-amd64/bin"
+        npm ci
     
     # Deploy hexo blog website.
     - name: Deploy
