@@ -29,7 +29,7 @@ jobs:
     - name: Install Dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        export PATH="$PATH:$RUNNER_TOOL_CACHE/pandoc-2.11.3.1-linux-amd64/bin"
+        export PATH="$PATH:$RUNNER_TOOL_CACHE/pandoc-2.11.3.1/bin"
         npm ci
     
     # Deploy hexo blog website.
