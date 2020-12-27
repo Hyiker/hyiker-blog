@@ -17,9 +17,10 @@ jobs:
       with:
         node-version: '12'
    
-    - name: install pandoc
+    - name: Install pandoc (Latex support)
       run: |
-        sudo apt-get install -y pandoc
+        wget -O pandoc.deb https://github.com/jgm/pandoc/releases/download/2.11.1/pandoc-2.11.1-1-amd64.deb
+        sudo dpkg -i pandoc.deb
     
     # Deploy hexo blog website.
     - name: Set git environment
