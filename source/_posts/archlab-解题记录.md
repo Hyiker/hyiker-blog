@@ -2,7 +2,7 @@
 title: archlab 解题记录
 date: 2020-12-01 20:58:49
 tags: archlab csapp
-keywords:
+keywords: archlab csapp
 categories: csapp解题记录
 description: 最近心血来潮，打算把csapp课程中，除了课内要求的bomb lab和attack lab以外的几个lab做掉，现在面对的第一个就是实验四——arch lab
 summary_img:
@@ -244,4 +244,179 @@ word aluB = [
 
 ### Part C
 
-此坑待填
+**2021-01-07 Updated** 来填坑了！之前一直不填这个坑一是因为期末考试，二是解决期末考试之后流水线看了挺久，但是发现其实要拿分和流水线(HCL 文件)中的内容修改关系不大，除去添加 iaddq 的部分，对于`pipe-full.hcl`几乎不用做任何修改。
+
+既然是利用流水线优化性能，那么就要谈到流水线处理器的几个基本优化方法：
+
+1. 避免寄存器冲突（提前读取减少 bubble）
+2. 减少分支跳转带来的惩罚（循环展开，以及利用`总是跳转`的预测原理）
+
+源文件不再展示，这里使用了以上两个技巧得到的代码如下
+
+```x86asm
+ncopy:
+
+##################################################################
+# You can modify this portion
+	# Loop header
+	xorq %rax,%rax		# count = 0;
+	iaddq $-1, %rdx
+	jne Begin
+	mrmovq (%rdi), %r10	# read val from src...
+	andq %r10, %r10		# val <= 0?
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	jle Done
+	iaddq $1, %rax
+	ret
+Begin:	iaddq $-7, %rdx
+	jmp tst1
+Loop1:	mrmovq (%rdi), %r10	# read val from src...
+	mrmovq 8(%rdi), %r13
+	rmmovq %r10, (%rsi)	# ...and store it to dst
+	andq %r10, %r10		# val <= 0?
+	jle Npos1		# if so, goto Npos:
+	iaddq $1, %rax		# count++
+Npos1:
+	rmmovq %r13, 8(%rsi)
+	mrmovq 16(%rdi), %r10
+	andq %r13, %r13
+	jle Npos2
+	iaddq $1, %rax
+Npos2:
+	rmmovq %r10, 16(%rsi)
+	mrmovq 24(%rdi), %r13
+	andq %r10, %r10
+	jle Npos3
+	iaddq $1, %rax
+Npos3:
+	rmmovq %r13, 24(%rsi)
+	mrmovq 32(%rdi), %r10
+	andq %r13, %r13
+	jle Npos4
+	iaddq $1, %rax
+
+Npos4:
+	rmmovq %r10, 32(%rsi)
+	mrmovq 40(%rdi), %r13
+	andq %r10, %r10
+	jle Npos5
+	iaddq $1, %rax
+Npos5:
+	rmmovq %r13, 40(%rsi)
+	mrmovq 48(%rdi), %r10
+	andq %r13, %r13
+	jle Npos6
+	iaddq $1, %rax
+Npos6:
+	rmmovq %r10, 48(%rsi)
+	mrmovq 56(%rdi), %r13
+	andq %r10, %r10
+	jle Npos7
+	iaddq $1, %rax
+
+Npos7:
+	rmmovq %r13, 56(%rsi)
+	andq %r13, %r13
+	jle Npos8
+	iaddq $1, %rax
+
+Npos8:
+	iaddq $64, %rdi		# src++
+	iaddq $64, %rsi		# dst++
+	iaddq $-8, %rdx		# len--
+tst1:
+	jge Loop1
+	mrmovq (%rdi), %r10
+	iaddq $8, %rdx
+	andq %rdx, %rdx
+	jg Loop
+	ret
+
+
+Loop:
+	mrmovq 8(%rdi), %r13
+	rmmovq %r10, (%rsi)
+	andq %r10, %r10
+	jle Nposs1
+	iaddq $1, %rax
+Nposs1:
+	iaddq $-1, %rdx
+	jg Cont
+	ret
+Cont:
+	mrmovq 16(%rdi), %r10
+	rmmovq %r13, 8(%rsi)
+	andq %r13, %r13
+	jle Nposs2		# if so, goto Npos:
+	iaddq $1, %rax
+
+Nposs2:
+	iaddq $-1, %rdx     # len--
+	jg Cont2
+	ret
+Cont2:
+	mrmovq 24(%rdi), %r13
+	rmmovq %r10, 16(%rsi)
+	andq %r10, %r10
+	jle Nposs3
+	iaddq $1, %rax
+
+Nposs3:
+	iaddq $-1, %rdx
+	jg Cont3
+	ret
+Cont3:
+	mrmovq 32(%rdi), %r10
+	rmmovq %r13, 24(%rsi)
+	andq %r13, %r13
+	jle Nposs4
+	iaddq $1, %rax
+
+Nposs4:
+	iaddq $-1, %rdx     # len--
+	jg Cont4
+	ret
+Cont4:
+	mrmovq 40(%rdi), %r13
+	rmmovq %r10, 32(%rsi)
+	andq %r10, %r10
+	jle Nposs5
+	iaddq $1, %rax
+
+Nposs5:
+	iaddq $-1, %rdx
+	jg Cont5
+	ret
+Cont5:
+	mrmovq 48(%rdi), %r10
+	rmmovq %r13, 40(%rsi)
+	andq %r13, %r13
+	jle Nposs6
+	iaddq $1, %rax
+
+Nposs6:
+	iaddq $-1, %rdx     # len--
+	jg Cont6
+	ret
+Cont6:
+	rmmovq %r10, 48(%rsi)
+	andq %r10, %r10
+	jle Done
+	iaddq $1, %rax
+##################################################################
+# Do not modify the following section of code
+# Function epilogue.
+Done:
+	ret
+```
+
+- 将循环步数展开为`8`剩下的情况暴力处理。
+- 大量使用了`iaddq`指令来减少常数写入、读出造成的损失。
+- 把所有`jmp Done`的部分全部替换为`ret`，可以减少分支预测惩罚以及跳转所需的额外指令。
+
+最后得到的结果不能说太好但是也是中规中矩如下
+
+> Average CPE 7.86
+> Score 52.7/60.0
+
+**Part C** 到此结束，总结一下，这个lab前两个阶段没有任何难度，<del>有手就行</del>，但是最后一个阶段至少对于我来说还是花了不少时间来查阅资料、阅读书籍，大约花费了一天整的时间来完成，收获不少，还是非常值得花费时间来做这个lab的。
