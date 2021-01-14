@@ -1,7 +1,10 @@
 ---
 title: 贪吃蛇AI简单实现
 date: 2020-03-31 22:28:24
-tags: AI 贪吃蛇 小游戏
+tags:
+ - AI
+ - 贪吃蛇
+ - 小游戏
 keywords: AI 贪吃蛇 小游戏
 categories: AI
 description: 随手写的小玩意

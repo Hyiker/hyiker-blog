@@ -1,7 +1,9 @@
 ---
 title: 北邮计算机系统基础 (CSAPP) 期末考试总结
 date: 2020-12-24 18:05:58
-tags: CSAPP 考试
+tags:
+ - CSAPP
+ - 考试
 keywords: CSAPP 考试 北邮 期末 计算机系统基础
 categories: 考试记录
 description:

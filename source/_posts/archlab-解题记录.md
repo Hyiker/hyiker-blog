@@ -1,7 +1,9 @@
 ---
 title: archlab 解题记录
 date: 2020-12-01 20:58:49
-tags: archlab csapp
+tags:
+ - archlab
+ - csapp
 keywords: archlab csapp
 categories: csapp解题记录
 description: 最近心血来潮，打算把csapp课程中，除了课内要求的bomb lab和attack lab以外的几个lab做掉，现在面对的第一个就是实验四——arch lab
@@ -419,4 +421,4 @@ Done:
 > Average CPE 7.86
 > Score 52.7/60.0
 
-**Part C** 到此结束，总结一下，这个lab前两个阶段没有任何难度，<del>有手就行</del>，但是最后一个阶段至少对于我来说还是花了不少时间来查阅资料、阅读书籍，大约花费了一天整的时间来完成，收获不少，还是非常值得花费时间来做这个lab的。
+**Part C** 到此结束，总结一下，这个 lab 前两个阶段没有任何难度，<del>有手就行</del>，但是最后一个阶段至少对于我来说还是花了不少时间来查阅资料、阅读书籍，大约花费了一天整的时间来完成，收获不少，还是非常值得花费时间来做这个 lab 的。
