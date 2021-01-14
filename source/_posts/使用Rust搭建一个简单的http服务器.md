@@ -3,8 +3,9 @@ title: 使用Rust编写HTTP服务器
 date: 2020-07-07 16:40:42
 tags:
  - rust
+keywords:
+ - rust
  - http服务器
-keywords: rust http服务器
 categories: Rust
 description: 花了将近半个月的时间入门rust，现在照着doc.rust-lang.org上的官网教程编写了一个http服务器
 summary_img:
