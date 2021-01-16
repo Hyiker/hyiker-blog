@@ -146,9 +146,19 @@ search:
 # Comment plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Comment/
 comment:
-    type: disqus
-    # Disqus shortname
-    shortname: 'hyiker'
+    type: valine
+    app_id: r0qA9mbjz4lWX92StwtatUSd-gzGzoHsz
+    app_key: eqbjaQHLLgk5yUvAwzm7cFVn
+    placeholder: "来留言⑧~"
+    notify: false
+    verify: false
+    avatar:
+    avatar_force: false
+    meta: ["nick", "mail", "link"]
+    page_size: 10
+    visitor: false
+    highlight: true
+    record_ip: false
 # Share plugin configurations
 # https://ppoffice.github.io/hexo-theme-icarus/categories/Plugins/Share/
 # Sidebar configurations.
